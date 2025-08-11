@@ -1,110 +1,173 @@
-.chat{
-    flex:1;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-.top{
-    border: 1px solid black;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 4rem;
-    
-}
-
-.left-top{
-    display: flex;
-    padding-left: 1rem;
-    gap: 0.5rem;
-    img{
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        object-fit: cover;
-    }
-
-}
-.right-top{
-    display: flex;
-    gap: 1rem;
-    margin-right: 0.5rem;
-    img{
-        width: 25px;
-        height: 25px;
-    }
-}
-
-.center {
+/* WhatsApp Web Style Chat Component - Fixed Layout */
+.chat {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Keep original layout structure */
+  position: relative;
+}
+
+/* Remove background pattern - keep original transparent background */
+.chat::before {
+  display: none; /* Remove the pattern overlay */
+}
+
+/* Header - WhatsApp style with original border structure */
+.top {
   border: 1px solid black;
   border-radius: 12px;
-  padding: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 4rem; /* Keep original height */
+  padding: 0 16px;
+  z-index: 1;
+  position: relative;
+}
+
+.left-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  cursor: pointer;
+  padding-left: 1rem; /* Restore original padding */
+}
+
+.left-top img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.userNameAndStatus {
+  display: flex;
+  flex-direction: column;
+}
+
+.userNameAndStatus h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 400;
+  color: #111b21;
+  line-height: 1.2;
+}
+
+.userNameAndStatus span {
+  font-size: 13px;
+  color: #667781;
+  margin-top: 2px;
+}
+
+.right-top {
+  display: flex;
+  align-items: center;
+  gap: 1rem; /* Restore original gap */
+  margin-right: 0.5rem; /* Restore original margin */
+}
+
+.right-top img {
+  width: 25px; /* Restore original size */
+  height: 25px; /* Restore original size */
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+}
+
+.right-top img:hover {
+  opacity: 1;
+}
+
+/* Messages Container - Keep original structure */
+.center {
+  flex: 1;
+  border: 1px solid black; /* Keep original border */
+  border-radius: 12px; /* Keep original border radius */
+  padding: 1rem; /* Keep original padding */
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1rem; /* Keep original gap */
+  z-index: 1;
+  position: relative;
+  background: transparent;
 
-  scrollbar-width: thin; /* Firefox */
-  scrollbar-color: rgba(136, 136, 136, 0.5) transparent;
+  /* WhatsApp scrollbar */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(136, 136, 136, 0.5) transparent; /* Keep original scrollbar colors */
 }
 
-/* WebKit Browsers */
 .center::-webkit-scrollbar {
-  width: 10px;
+  width: 10px; /* Keep original width */
 }
 
 .center::-webkit-scrollbar-track {
-  background: transparent; /* fully transparent track */
+  background: transparent;
 }
 
 .center::-webkit-scrollbar-thumb {
-  background-color: rgba(136, 136, 136, 0.4); /* semi-transparent grey */
+  background-color: rgba(136, 136, 136, 0.4); /* Keep original color */
   border-radius: 10px;
-  border: 2px solid transparent; /* gives inner padding-like look */
-  background-clip: content-box; /* ensures the border stays transparent */
+  border: 2px solid transparent;
+  background-clip: content-box;
 }
 
 .center::-webkit-scrollbar-thumb:hover {
   background-color: rgba(100, 100, 100, 0.6);
 }
 
-/* Common message style */
+/* Message Container - Keep original structure */
 .message {
   display: flex;
-  align-items: flex-end;
-  gap: 0.6rem;
-  max-width: 70%;
+  align-items: flex-end; /* Restore original alignment */
+  gap: 0.6rem; /* Restore original gap */
+  max-width: 70%; /* Keep original max-width */
+  margin-bottom: 12px;
+  position: relative;
 }
 
-/* Incoming message (left side) */
+/* Incoming messages (left side) */
 .other-user {
   align-self: flex-start;
-
-  .content {
-    background: rgba(255, 255, 255, 0.1);
-    padding: 0.8rem 1rem;
-    border-radius: 12px 12px 12px 0;
-    color: white;
-  }
 }
 
-/* Outgoing message (right side) */
+.other-user .content {
+  background: rgba(255, 255, 255, 0.1); /* Keep original background */
+  border-radius: 12px 12px 12px 0; /* Keep original border radius */
+  padding: 0.8rem 1rem; /* Keep original padding */
+  box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.13);
+  position: relative;
+  margin-left: 0;
+  color: white; /* Keep original text color */
+}
+
+/* Remove the triangle for original style */
+.other-user .content::before {
+  display: none;
+}
+
+/* Outgoing messages (right side) */
 .my-message {
   align-self: flex-end;
-  flex-direction: row-reverse;
-
-  .content {
-    background: #4f93ff;
-    padding: 0.8rem 1rem;
-    border-radius: 12px 12px 0 12px;
-    color: white;
-  }
+  flex-direction: row-reverse; /* Keep original direction */
 }
 
-/* Common styles */
+.my-message .content {
+  background: #4f93ff; /* Keep original background */
+  border-radius: 12px 12px 0 12px; /* Keep original border radius */
+  padding: 0.8rem 1rem; /* Keep original padding */
+  box-shadow: 0 1px 0.5px rgba(0, 0, 0, 0.13);
+  position: relative;
+  color: white; /* Keep original text color */
+}
+
+/* Remove the triangle for original style */
+.my-message .content::before {
+  display: none;
+}
+
+/* Add profile image back */
 .profile {
   width: 32px;
   height: 32px;
@@ -112,60 +175,535 @@
   object-fit: cover;
 }
 
+/* Message text */
 .text {
   margin: 0;
+  font-size: 14.2px;
+  line-height: 1.4;
   word-wrap: break-word;
+  white-space: pre-wrap;
+  margin-bottom: 4px;
 }
 
+/* Message meta info */
 .meta {
-  font-size: 0.75rem;
-  color: #ccc;
-  margin-top: 4px;
   display: flex;
-  gap: 6px;
   align-items: center;
+  justify-content: flex-end;
+  gap: 6px; /* Keep original gap */
+  margin-top: 4px;
+  font-size: 0.75rem; /* Keep original font size */
+  color: #ccc; /* Keep original color */
+}
 
-  .status {
-    width: 16px;
-    height: 16px;
+.time {
+  font-size: 11px;
+  color: #ccc; /* Keep original color */
+  user-select: none;
+}
+
+.status {
+  width: 16px;
+  height: 16px;
+  opacity: 0.7; /* Keep original opacity */
+}
+
+/* Message reactions - WhatsApp Web style */
+.message-reactions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  margin-top: 2px;
+  margin-left: 8px;
+  position: relative;
+  z-index: 2;
+}
+
+.my-message .message-reactions {
+  margin-left: 0;
+  margin-right: 8px;
+  justify-content: flex-end;
+}
+
+.reaction {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding: 3px 8px;
+  background-color: #ffffff;
+  border: 1px solid #e9edef;
+  border-radius: 13px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  min-height: 24px;
+  line-height: 1;
+}
+
+.reaction:hover {
+  background-color: #f5f6f6;
+  border-color: #d1d7db;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.reaction.reacted {
+  background-color: #e7f3ff;
+  border-color: #54a3ff;
+  color: #1976d2;
+}
+
+.reaction.reacted:hover {
+  background-color: #d0e7ff;
+  border-color: #4285f4;
+}
+
+/* Reaction emoji styling */
+.reaction .emoji {
+  font-size: 14px;
+  line-height: 1;
+}
+
+/* Reaction count styling */
+.reaction .count {
+  font-size: 12px;
+  font-weight: 500;
+  color: #667781;
+  margin-left: 1px;
+}
+
+.reaction.reacted .count {
+  color: #1976d2;
+}
+
+/* Style reactions for dark message backgrounds */
+.my-message .reaction,
+.other-user .reaction {
+  background-color: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(4px);
+}
+
+.my-message .reaction:hover,
+.other-user .reaction:hover {
+  background-color: rgba(255, 255, 255, 1);
+}
+
+/* Position reactions relative to message bubbles */
+.message .content {
+  position: relative;
+}
+
+.message-reactions {
+  position: relative;
+  margin-top: -2px; /* Slightly overlap the message bubble */
+}
+
+/* Reaction buttons - WhatsApp Web style */
+.reaction-buttons {
+  display: none;
+  position: absolute;
+  top: -40px;
+  background-color: #ffffff;
+  border-radius: 25px;
+  padding: 6px 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border: 1px solid #e9edef;
+  gap: 8px;
+  z-index: 10;
+  backdrop-filter: blur(8px);
+}
+
+.other-user .reaction-buttons {
+  left: 8px;
+}
+
+.my-message .reaction-buttons {
+  right: 8px;
+}
+
+.message:hover .reaction-buttons {
+  display: flex;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
-.bottom{
-    border: 1px solid black;
-    border-radius: 12px;
-    height: 4rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.6rem;
-
-    img{
-        width: 25px;
-        height: 25px;
-        cursor: pointer;
-    }
+.add-reaction {
+  padding: 6px;
+  background: none;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 18px;
+  transition: all 0.2s ease;
+  line-height: 1;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.left-message-bar{
-    display: flex;
-    align-items: center;
-    flex: 1;
-    gap: 0.6rem;
+.add-reaction:hover {
+  background-color: #f5f6f6;
+  transform: scale(1.15);
+}
+
+/* Quick reaction emojis */
+.quick-reactions {
+  display: flex;
+  gap: 4px;
+}
+
+.quick-reaction {
+  padding: 4px;
+  background: none;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.15s ease;
+  line-height: 1;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.quick-reaction:hover {
+  background-color: #f5f6f6;
+  transform: scale(1.2);
+}
+
+/* Delete message button */
+.delete-message {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  margin-left: 8px;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.delete-message:hover {
+  opacity: 1;
+}
+
+/* Message images */
+.message-image {
+  max-width: 200px; /* Keep original size */
+  border-radius: 8px;
+  margin-bottom: 5px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.message-image:hover {
+  transform: scale(1.05);
+}
+
+/* Input section - Keep original structure */
+.bottom {
+  border: 1px solid black; /* Keep original border */
+  border-radius: 12px; /* Keep original border radius */
+  height: 4rem; /* Keep original height */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem; /* Keep original padding */
+  z-index: 1;
+  position: relative;
+}
+
+.message-form {
+  display: flex;
+  align-items: center; /* Keep original alignment */
+  width: 100%;
+  gap: 8px;
+}
+
+.left-message-bar {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  gap: 0.6rem; /* Keep original gap */
+}
+
+.bottom img {
+  width: 25px; /* Keep original size */
+  height: 25px; /* Keep original size */
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+}
+
+.bottom img:hover {
+  opacity: 1;
 }
 
 .text-area {
   flex: 1;
-  display: flex;
+  display: flex; /* Keep original display */
+  position: relative;
 }
 
 .text-area input {
   width: 100%;
-  padding: 10px;
+  padding: 10px; /* Keep original padding */
   border-radius: 20px;
   border: none;
   outline: none;
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.1); /* Keep original background */
+  color: white; /* Keep original text color */
+  font-size: 15px;
+  line-height: 1.4;
+  resize: none;
+  min-height: 20px;
+  max-height: 100px;
+}
+
+.text-area input::placeholder {
+  color: #8696a0;
+}
+
+.text-area input:focus {
+  outline: none;
+}
+
+/* Send button - WhatsApp style */
+button[type="submit"] {
+  background-color: #00a884;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  font-size: 18px;
+}
+
+button[type="submit"]:hover:not(:disabled) {
+  background-color: #017561;
+}
+
+button[type="submit"]:disabled {
+  background-color: #8696a0;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* States */
+.loading-messages,
+.no-conversation,
+.no-messages {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px; /* Keep original height */
+  color: #666; /* Keep original color */
+  font-size: 14px;
+  text-align: center;
+  font-style: italic; /* Keep original style */
+}
+
+.error-messages {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px; /* Keep original padding */
+  margin: 10px; /* Keep original margin */
+  color: #ff4444; /* Keep original color */
+  background-color: #ffebee; /* Keep original background */
+  border-radius: 8px;
+}
+
+.error-messages button {
+  margin-top: 10px; /* Keep original margin */
+  padding: 8px 16px; /* Keep original padding */
+  background-color: #ff4444; /* Keep original background */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.error-messages button:hover {
+  background-color: #cc0000; /* Keep original hover color */
+}
+
+/* Animation */
+@keyframes messageSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px); /* Keep original transform */
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.message {
+  animation: messageSlideIn 0.3s ease-out; /* Keep original timing */
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+  .center {
+    padding: 1rem; /* Keep consistent padding */
+  }
+}
+
+@media (max-width: 768px) {
+  .center {
+    padding: 1rem; /* Keep consistent padding */
+  }
+  
+  .message {
+    max-width: 80%;
+  }
+  
+  .reaction-buttons {
+    opacity: 1; /* Always show on mobile */
+  }
+  
+  .add-reaction {
+    font-size: 16px;
+    padding: 4px 6px;
+  }
+  
+  .reaction {
+    font-size: 14px;
+    padding: 4px 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .message {
+    max-width: 90%;
+  }
+  
+  .text-area input {
+    font-size: 16px; /* Prevent zoom on iOS */
+  }
+}
+
+.emoji-wrapper {
+  position: relative; /* so absolute positioning is relative to this */
+}
+
+.emoji-picker-container {
+  position: absolute;
+  bottom: 50px; /* shows above the input bar */
+  left: 0;
+  z-index: 1000;
+}
+
+.emoji-picker-container .EmojiPickerReact {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  border-radius: 8px;
+}
+
+/* Add these styles to your Chat.css file */
+
+/* Avatar container with online indicator */
+.avatar-container {
+  position: relative;
+  display: inline-block;
+}
+
+.online-indicator {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid white;
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.1);
+}
+
+.online-indicator.online {
+  background-color: #25d366; /* WhatsApp green */
+}
+
+.online-indicator.offline {
+  background-color: #8696a0; /* Gray for offline */
+}
+
+/* Profile container for message senders */
+.profile-container {
+  position: relative;
+  display: inline-block;
+}
+
+.profile-online-indicator {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1px solid white;
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.1);
+}
+
+.profile-online-indicator.online {
+  background-color: #25d366;
+}
+
+.profile-online-indicator.offline {
+  background-color: #8696a0;
+}
+
+/* Status text styling */
+.status-text {
+  color: #8696a0;
+  font-size: 13px;
+  font-weight: normal;
+}
+
+/* Connection status banner */
+.connection-status {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 8px 16px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
+  z-index: 1000;
+  animation: slideDown 0.3s ease-in-out;
+}
+
+.connection-status.connecting {
+  background-color: #ffa500;
   color: white;
 }
 
+.connection-status.disconnected {
+  background-color: #dc3545;
+  color: white;
+}
+
+.connection-status.error {
+  background-color: #dc3545;
+  color: white;
+}
