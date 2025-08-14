@@ -35,14 +35,14 @@ interface Message {
   reactions: MessageReaction[];
 }
 
-interface ConversationData {
-  conversation: {
-    id: string;
-    isGroup: boolean;
-    participants: User[];
-  };
-  messages: Message[];
-}
+// interface ConversationData {
+//   conversation: {
+//     id: string;
+//     isGroup: boolean;
+//     participants: User[];
+//   };
+//   messages: Message[];
+// }
 
 // interface ApiResponse {
 //   success: boolean;
