@@ -147,7 +147,7 @@ const ChatList: React.FC = () => {
 
   // Handle conversation click - now sets the selected conversation
   const handleConversationClick = (conversation: Conversation) => {
-    console.log('Selected conversation:', conversation.id);
+    // console.log('Selected conversation:', conversation.id);
     
     // Set the selected conversation in context
     setSelectedConversation({

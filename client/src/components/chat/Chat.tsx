@@ -1,12 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./Chat.css";
 import Avatar from "../../assets/avatar.png";
-import Phone from "../../assets/phone.png";
-import Video from "../../assets/video.png";
-import Info from "../../assets/info.png";
-import Plus from "../../assets/plus.png";
 import Emoji from "../../assets/emoji.png";
-import Mic from "../../assets/mic.png";
 import Details from "../detail/Details";
 import { useConversationContext } from '../../context/ConversationContext';
 import { io, Socket } from 'socket.io-client';
@@ -102,7 +97,7 @@ const Chat: React.FC = () => {
 
     // Connection events
     socketInstance.on('connect', () => {
-      console.log('Connected to server');
+      // console.log('Connected to server');
       setConnectionStatus('connected');
       setError(null);
       
@@ -111,7 +106,7 @@ const Chat: React.FC = () => {
     });
 
     socketInstance.on('disconnect', () => {
-      console.log('Disconnected from server');
+      // console.log('Disconnected from server');
       setConnectionStatus('disconnected');
     });
 
@@ -123,12 +118,12 @@ const Chat: React.FC = () => {
 
     // Message events
     socketInstance.on('new_message', (message: Message) => {
-      console.log('New message received:', message);
+      // console.log('New message received:', message);
       setMessages(prev => [...prev, message]);
     });
 
     socketInstance.on('message_sent', (data: { messageId: string }) => {
-      console.log('Message sent confirmation:', data.messageId);
+      // console.log('Message sent confirmation:', data.messageId);
       setSending(false);
     });
 
@@ -139,13 +134,13 @@ const Chat: React.FC = () => {
     });
 
     socketInstance.on('message_deleted', (data: { messageId: string; conversationId: string }) => {
-      console.log('Message deleted:', data);
+      // console.log('Message deleted:', data);
       setMessages(prev => prev.filter(msg => msg.id !== data.messageId));
     });
 
     // Reaction events
     socketInstance.on('reaction_added', (data: { reaction: MessageReaction; messageId: string }) => {
-      console.log('Reaction added:', data);
+      // console.log('Reaction added:', data);
       setMessages(prev => prev.map(msg => 
         msg.id === data.messageId 
           ? { ...msg, reactions: [...msg.reactions, data.reaction] }
@@ -154,7 +149,7 @@ const Chat: React.FC = () => {
     });
 
     socketInstance.on('reaction_removed', (data: { messageId: string; userId: string; emoji: string }) => {
-      console.log('Reaction removed:', data);
+      // console.log('Reaction removed:', data);
       setMessages(prev => prev.map(msg => 
         msg.id === data.messageId 
           ? { 
@@ -192,7 +187,7 @@ const Chat: React.FC = () => {
 
     // User status events - NEW
     socketInstance.on('user_status_changed', (data: UserStatus) => {
-      console.log('User status changed:', data);
+      // console.log('User status changed:', data);
       setUserStatuses(prev => {
         const newMap = new Map(prev);
         newMap.set(data.userId, data);
@@ -202,7 +197,7 @@ const Chat: React.FC = () => {
 
     // Handle bulk user statuses response
     socketInstance.on('user_statuses_response', (statuses: UserStatus[]) => {
-      console.log('Received user statuses:', statuses);
+      // console.log('Received user statuses:', statuses);
       setUserStatuses(prev => {
         const newMap = new Map(prev);
         statuses.forEach(status => {
@@ -214,7 +209,7 @@ const Chat: React.FC = () => {
 
     // Notification events
     socketInstance.on('message_notification', (data) => {
-      console.log('New message notification:', data);
+      // console.log('New message notification:', data);
       // Handle notifications for messages in other conversations
       // You might want to show a toast notification or update conversation list
     });
@@ -331,6 +326,9 @@ const Chat: React.FC = () => {
       setError('Not connected to server. Please check your connection.');
       return;
     }
+
+    setisEmojiPickerOpen(false); // Close emoji picker if open
+
 
     try {
       setSending(true);
@@ -570,16 +568,6 @@ const Chat: React.FC = () => {
             <span className="status-text">{getLastSeenStatus()}</span>
           </div>
         </div>
-        {/* <div className="right-top">
-          <img src={Video} alt="video call" title="Video call" />
-          <img src={Phone} alt="voice call" title="Voice call" />
-          <img 
-            src={Info} 
-            alt="contact info" 
-            title="Contact info"
-            onClick={() => setShowDetails(!showDetails)} 
-          />
-        </div> */}
       </div>
 
       {/* Messages or Details */}
@@ -727,8 +715,6 @@ const Chat: React.FC = () => {
           <div className="bottom">
             <form onSubmit={sendMessage} className="message-form">
               <div className="left-message-bar">
-                {/* <img src={Emoji} alt="Emoji" title="Emoji" onClick={() => setisEmojiPickerOpen(prev => !prev)}/>
-                <EmojiPicker open={isEmojiPickerOpen}/> */}
                 <div className="emoji-wrapper">
                   <img 
                     src={Emoji} 

@@ -36,70 +36,166 @@ export const syncUser = async (req: Request, res: Response) => {
   }
 };
 
-// 2. Search user by name
+// 2. search User by user name
 export const searchUser = async (req: Request, res: Response) => {
-  const { name } = req.body;
+  const { name, currentUserClerkId } = req.body;
 
   if (!name || typeof name !== 'string') {
     return res.status(400).json({ message: 'Name is required' });
   }
 
+  if (!currentUserClerkId) {
+    return res.status(400).json({ message: 'Current user Clerk ID is required' });
+  }
+
   try {
+    // First, get the current user's database ID from their clerkId
+    const currentUser = await prisma.user.findUnique({
+      where: { clerkId: currentUserClerkId },
+      select: { id: true }
+    });
+
+    if (!currentUser) {
+      return res.status(404).json({ message: 'Current user not found' });
+    }
+
+    // Get users matching the search term, excluding the current user
     const users = await prisma.user.findMany({
       where: {
-        name: {
-          contains: name,
-          mode: 'insensitive', // case-insensitive search
-        },
+        AND: [
+          {
+            name: {
+              contains: name,
+              mode: 'insensitive',
+            }
+          },
+          {
+            clerkId: {
+              not: currentUserClerkId // Exclude current user from results
+            }
+          }
+        ]
       },
       select: {
         id: true,
+        clerkId: true,
         name: true,
         imageUrl: true,
       },
-      take: 10, // limit results to 10
+      take: 10,
     });
 
-    return res.json(users);
+    // Get existing conversations for the current user
+    const existingConversations = await prisma.conversation.findMany({
+      where: {
+        isGroup: false,
+        participants: {
+          some: {
+            userId: currentUser.id
+          }
+        }
+      },
+      include: {
+        participants: {
+          select: {
+            userId: true
+          }
+        }
+      }
+    });
+
+    // Create a set of user IDs that current user already has conversations with
+    const existingChatUserIds = new Set<string>();
+    existingConversations.forEach(conversation => {
+      conversation.participants.forEach(participant => {
+        if (participant.userId !== currentUser.id) {
+          existingChatUserIds.add(participant.userId);
+        }
+      });
+    });
+
+    // Add isAlreadyInChat flag to each user
+    const usersWithChatStatus = users.map(user => ({
+      id: user.id,
+      clerkId: user.clerkId,
+      name: user.name,
+      imageUrl: user.imageUrl,
+      isAlreadyInChat: existingChatUserIds.has(user.id)
+    }));
+
+    return res.json(usersWithChatStatus);
   } catch (err) {
     console.error('Search Error:', err);
     return res.status(500).json({ message: 'Server Error' });
   }
 };
 
-// 3. Add a user to a chat (no auth)
+// add User To Chat controller
 export const addUserToChat = async (req: Request, res: Response) => {
-  const { currentUserId, targetUserId } = req.body;
-  console.log(currentUserId, targetUserId)
+  const { currentUserClerkId, targetUserClerkId } = req.body;
+  console.log('Adding user to chat:', currentUserClerkId, targetUserClerkId);
 
-  if (!currentUserId || !targetUserId) {
-    return res.status(400).json({ message: "Both currentUserId and targetUserId are required" });
+  if (!currentUserClerkId || !targetUserClerkId) {
+    return res.status(400).json({ 
+      message: "Both currentUserClerkId and targetUserClerkId are required" 
+    });
   }
 
   try {
-    if (currentUserId === targetUserId) {
+    if (currentUserClerkId === targetUserClerkId) {
       return res.status(400).json({ message: "Cannot chat with yourself" });
     }
 
-    // ✅ Correctly check if BOTH users are in the same conversation
+    // Get both users from database using their clerkIds
+    const currentUser = await prisma.user.findUnique({
+      where: { clerkId: currentUserClerkId },
+      select: { id: true }
+    });
+
+    const targetUser = await prisma.user.findUnique({
+      where: { clerkId: targetUserClerkId },
+      select: { id: true }
+    });
+
+    if (!currentUser) {
+      return res.status(404).json({ message: "Current user not found" });
+    }
+
+    if (!targetUser) {
+      return res.status(404).json({ message: "Target user not found" });
+    }
+
+    // Check if BOTH users are already in the same conversation
     const existingConversation = await prisma.conversation.findFirst({
       where: {
         isGroup: false,
-        participants: {
-          some: { userId: currentUserId },
-        },
-        AND: {
-          participants: {
-            some: { userId: targetUserId },
+        AND: [
+          {
+            participants: {
+              some: { userId: currentUser.id }
+            }
           },
-        },
+          {
+            participants: {
+              some: { userId: targetUser.id }
+            }
+          }
+        ]
       },
     });
 
     let conversationId: string;
+    let isNewConversation = false;
 
     if (existingConversation) {
+      // Return existing conversation
       conversationId = existingConversation.id;
+      return res.json({ 
+        success: true, 
+        conversationId,
+        isExisting: true,
+        message: "User is already added to chat"
+      });
     } else {
       // Create a new conversation with both users
       const newConversation = await prisma.conversation.create({
@@ -107,16 +203,22 @@ export const addUserToChat = async (req: Request, res: Response) => {
           isGroup: false,
           participants: {
             create: [
-              { userId: currentUserId },
-              { userId: targetUserId },
+              { userId: currentUser.id },
+              { userId: targetUser.id },
             ],
           },
         },
       });
       conversationId = newConversation.id;
+      isNewConversation = true;
     }
 
-    return res.json({ success: true, conversationId });
+    return res.json({ 
+      success: true, 
+      conversationId,
+      isNewConversation,
+      message: isNewConversation ? "User added to chat successfully" : "User is already added to chat"
+    });
   } catch (err) {
     console.error("Error adding user to chat:", err);
     return res.status(500).json({ message: "Server error" });
