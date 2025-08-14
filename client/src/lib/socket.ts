@@ -4,7 +4,7 @@ let socket: Socket | null = null;
 
 export const initSocket = (userId: string) => {
   if (!socket) {
-    socket = io(process.env.REACT_APP_SOCKET_URL || 'http://localhost:3000', {
+    socket = io('http://localhost:3000', {
       auth: { userId },
       transports: ['websocket', 'polling'],
       autoConnect: true,
@@ -24,6 +24,7 @@ export const disconnectSocket = () => {
       socket.disconnect();
     } catch (e) {
       // ignore
+      console.error('Error disconnecting socket:', e);
     }
     socket = null;
   }

@@ -44,10 +44,10 @@ interface ConversationData {
   messages: Message[];
 }
 
-interface ApiResponse {
-  success: boolean;
-  data: ConversationData;
-}
+// interface ApiResponse {
+//   success: boolean;
+//   data: ConversationData;
+// }
 
 interface UserStatus {
   userId: string;
@@ -73,7 +73,7 @@ const Chat: React.FC = () => {
   const [userStatuses, setUserStatuses] = useState<Map<string, UserStatus>>(new Map());
 
   const endRef = useRef<HTMLDivElement | null>(null);
-  const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const typingTimeoutRef = useRef<number | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
   
   // Get selected conversation from context
@@ -122,7 +122,7 @@ const Chat: React.FC = () => {
       setMessages(prev => [...prev, message]);
     });
 
-    socketInstance.on('message_sent', (data: { messageId: string }) => {
+    socketInstance.on('message_sent', () => {
       // console.log('Message sent confirmation:', data.messageId);
       setSending(false);
     });
@@ -208,7 +208,7 @@ const Chat: React.FC = () => {
     });
 
     // Notification events
-    socketInstance.on('message_notification', (data) => {
+    socketInstance.on('message_notification', () => {
       // console.log('New message notification:', data);
       // Handle notifications for messages in other conversations
       // You might want to show a toast notification or update conversation list
